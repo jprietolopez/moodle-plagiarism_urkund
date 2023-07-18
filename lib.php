@@ -1985,28 +1985,31 @@ function plagiarism_urkund_get_file_object($plagiarismfile) {
             } else {
                 $submission = $assign->get_user_submission($userid, false);
             }
-            $submissionplugins = $assign->get_submission_plugins();
 
-            foreach ($submissionplugins as $submissionplugin) {
-                $component = $submissionplugin->get_subtype() . '_' . $submissionplugin->get_type();
-                $fileareas = $submissionplugin->get_file_areas();
-                foreach ($fileareas as $filearea => $name) {
-                    if (debugging()) {
-                        mtrace("URKUND fileid:" . $plagiarismfile->id . " Check component:" . $component . " Filearea:" .
-                               $filearea . " Submission" . $submission->id);
-                    }
-                    $files = $fs->get_area_files(
-                        $assign->get_context()->id,
-                        $component,
-                        $filearea,
-                        $submission->id,
-                        "timemodified",
-                        false
-                    );
+            if($submission !== false) {
+                $submissionplugins = $assign->get_submission_plugins();
 
-                    foreach ($files as $file) {
-                        if ($file->get_contenthash() == $plagiarismfile->identifier) {
-                            return $file;
+                foreach ($submissionplugins as $submissionplugin) {
+                    $component = $submissionplugin->get_subtype() . '_' . $submissionplugin->get_type();
+                    $fileareas = $submissionplugin->get_file_areas();
+                    foreach ($fileareas as $filearea => $name) {
+                        if (debugging()) {
+                            mtrace("URKUND fileid:" . $plagiarismfile->id . " Check component:" . $component . " Filearea:" .
+                                $filearea . " Submission" . $submission->id);
+                        }
+                        $files = $fs->get_area_files(
+                            $assign->get_context()->id,
+                            $component,
+                            $filearea,
+                            $submission->id,
+                            "timemodified",
+                            false
+                        );
+
+                        foreach ($files as $file) {
+                            if ($file->get_contenthash() == $plagiarismfile->identifier) {
+                                return $file;
+                            }
                         }
                     }
                 }
