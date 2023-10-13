@@ -25,9 +25,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2022111900;
+$plugin->version = 2023071900;
 $plugin->requires = 2022041900; // Requires 4.0.
 $plugin->cron     = 0; // Cron function no longer used.
 $plugin->component = 'plagiarism_urkund';
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '4.0.2';
+$plugin->release   = '4.0.3';
