@@ -1,0 +1,14 @@
+  name: Create Release Tag
+
+  on:
+    pull_request:
+      branches:
+        - main
+      types:
+        - closed
+
+  jobs:
+    create-tag:
+      name: Create release tag
+      if: github.event.pull_request.merged == true
+      uses: turnitin/github-actions/.github/workflows/github-tag.yaml@main
