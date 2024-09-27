@@ -169,8 +169,14 @@ if (!empty($delete) && confirm_sesskey()) {
 
 $table = new \plagiarism_urkund\output\debug_table('debugtable');
 
-$userfields = get_all_user_name_fields(true, 'u');
-$sqlfields = "t.*, ".$userfields.", m.name as moduletype, ".
+//$userfields = get_all_user_name_fields(true, 'u');
+use core_user\fields;
+
+$userfieldsapi = fields::for_name();
+$userfields = $userfieldsapi->get_required_fields();
+$userfieldsstring = implode(',', $userfields);
+
+$sqlfields = "t.*, ".$userfieldsstring.", m.name as moduletype, ".
     "cm.course as courseid, cm.instance as cminstance, c.fullname, c.shortname";
 $sqlfrom = "{plagiarism_urkund_files} t, {user} u, {modules} m, {course_modules} cm, {course} c ";
 $sqlwhere = "m.id = cm.module AND cm.id = t.cm AND t.userid = u.id AND c.id = cm.course AND t.statuscode <> 'Analyzed'";
