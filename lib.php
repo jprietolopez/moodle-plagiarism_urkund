@@ -1442,6 +1442,14 @@ function urkund_send_file_to_urkund($plagiarismfile, $plagiarismsettings, $file)
         $DB->update_record('plagiarism_urkund_files', $plagiarismfile);
         return true;
     }
+
+    if ($file->get_filesize() > 100 * 1024 ** 2) { // File is larger than 100 MB, marking to large and skipping.
+        mtrace("URKUND fileid:".$plagiarismfile->id. ' is to large, skipping...');
+        $plagiarismfile->statuscode = URKUND_STATUSCODE_TOO_LARGE;
+        $DB->update_record('plagiarism_urkund_files', $plagiarismfile);
+        return true;
+    }
+
     mtrace("URKUND fileid:".$plagiarismfile->id. ' sending to URKUND');
     if (!empty($plagiarismfile->relateduserid)) {
         $useremail = $DB->get_field('user', 'email', array('id' => $plagiarismfile->relateduserid));
